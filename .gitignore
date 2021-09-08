@@ -1,0 +1,22 @@
+# Ignore expressions
+
+node_modules/
+database/
+dist/
+work_dir/
+
+# PyCharm
+.idea/
+
+venv/
+.env
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+.env.local
+
+.DS_Store
+
