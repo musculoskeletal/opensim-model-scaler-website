@@ -4,23 +4,25 @@
       <div class="modal-wrapper">
         <div class="modal-container">
           <div class="modal-header">
-            <slot name="header">
-              default header
-            </slot>
+            <slot name="header"> default header </slot>
           </div>
 
           <div class="modal-body">
-            <slot name="body">
-              default body
-            </slot>
+            <slot name="body"> default body </slot>
           </div>
 
           <div class="modal-footer">
             <slot name="footer">
-              <button class="swal2-cancel swal2-styled" @click="$emit('cancel')">
+              <button
+                class="swal2-cancel swal2-styled"
+                @click="$emit('cancel')"
+              >
                 Cancel
               </button>
-              <button class="swal2-confirm swal2-styled" @click="$emit('confirm')">
+              <button
+                class="swal2-confirm swal2-styled"
+                @click="$emit('confirm')"
+              >
                 {{ confirmText }}
               </button>
             </slot>
@@ -33,23 +35,22 @@
 
 <script>
 export default {
-  name: 'ModalDialog',
+  name: "ModalDialog",
   props: {
     confirmText: {
       type: String,
       default() {
-        return 'Create'
-      }
-    }
+        return "Create";
+      },
+    },
   },
   methods: {
     onMouseWheel() {
-      // console.log("mouse wheel")
       // event.preventDefault()
       // event.stopPropogation()
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style scoped>

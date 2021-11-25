@@ -6,7 +6,11 @@
       </tr>
     </table>
 
-    <div class="table-data-rows" @scroll="$emit('scroll')" :style="{'overflow-y': 'auto', 'max-height': maxHeight + 'px'}">
+    <div
+      class="table-data-rows"
+      @scroll="$emit('scroll')"
+      :style="{ 'overflow-y': 'auto', 'max-height': maxHeight + 'px' }"
+    >
       <table ref="tableData">
         <template v-for="row in rows">
           <tr :key="row">
@@ -26,7 +30,7 @@
 
 <script>
 export default {
-  name: 'RadioListTable',
+  name: "RadioListTable",
   props: {
     heading: {
       type: String,
@@ -37,7 +41,7 @@ export default {
     clear: {
       type: Boolean,
     },
-   },
+  },
   data() {
     return {
       selected: [],
@@ -45,55 +49,54 @@ export default {
       modalHeader: 0,
       modalFooter: 0,
       maxHeight: 0,
-    }
+    };
   },
   watch: {
-    selected: function() {
-      this.$emit('selection-changed', this.selected)
+    selected: function () {
+      this.$emit("selection-changed", this.selected);
     },
-    clear: function() {
-      this.selected = []
+    clear: function () {
+      this.selected = [];
     },
   },
   mounted() {
-    this.ro = new ResizeObserver((entries) => {
-      let taskEntry = entries[0]
-      const dataRows = taskEntry.target.parentElement.getBoundingClientRect()
-        .height
-      const modalBody = taskEntry.target.parentElement.parentElement.parentElement
-      let occupiedSpace = 0
-      modalBody.children.forEach(element => {
-        occupiedSpace += element.getBoundingClientRect()
-        .height
+    this.ro = new ResizeObserver(entries => {
+      let taskEntry = entries[0];
+      const dataRows =
+        taskEntry.target.parentElement.getBoundingClientRect().height;
+      const modalBody =
+        taskEntry.target.parentElement.parentElement.parentElement;
+      let occupiedSpace = 0;
+      Array.from(modalBody.children).forEach(element => {
+        occupiedSpace += element.getBoundingClientRect().height;
       });
       const vh = Math.max(
         document.documentElement.clientHeight || 0,
         window.innerHeight || 0
-      )
+      );
       const maxHeight =
-        0.8 * vh - /* matches modal dialog maximum height of 80vh. */
-        64 - /* container padding two * 32 */
-        64 - /* modal body margin two * 32 */
+        0.8 * vh /* matches modal dialog maximum height of 80vh. */ -
+        64 /* container padding two * 32 */ -
+        64 /* modal body margin two * 32 */ -
         occupiedSpace +
         dataRows -
         this.modalHeader -
-        this.modalFooter
-      this.maxHeight = maxHeight
-    })
-    this.ro.observe(this.$refs.tableData)
+        this.modalFooter;
+      this.maxHeight = maxHeight;
+    });
+    this.ro.observe(this.$refs.tableData);
     this.modalHeader = document
-      .querySelector('div.modal-header')
-      .getBoundingClientRect().height
+      .querySelector("div.modal-header")
+      .getBoundingClientRect().height;
     this.modalFooter = document
-      .querySelector('div.modal-footer')
-      .getBoundingClientRect().height
+      .querySelector("div.modal-footer")
+      .getBoundingClientRect().height;
   },
-}
+};
 </script>
 
 <style scoped>
 td {
   text-align: start;
 }
-
 </style>

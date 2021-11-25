@@ -30,132 +30,131 @@
 </template>
 
 <script>
-import { upload } from '@/services/BackendAPI'
-import CircularProgress from '@/components/CircularProgress'
-import Vue from 'vue'
+import { upload } from "@/services/BackendAPI";
+import CircularProgress from "@/components/CircularProgress";
+import Vue from "vue";
 
 const STATUS_INITIAL = 0,
-  STATUS_SAVING = 1
+  STATUS_SAVING = 1;
 
 export default {
-  name: 'UploadFile',
+  name: "UploadFile",
   components: { CircularProgress },
   data() {
     return {
       currentStatus: null,
-      uploadFieldName: 'trcs',
+      uploadFieldName: "trcs",
       fileCount: 0,
       resolvedCount: 0,
       progressTotal: 100,
       progressTracking: {},
       progress: 0,
-    }
+    };
   },
   computed: {
     isInitial() {
-      return this.currentStatus === STATUS_INITIAL
+      return this.currentStatus === STATUS_INITIAL;
     },
     isSaving() {
-      return this.currentStatus === STATUS_SAVING
+      return this.currentStatus === STATUS_SAVING;
     },
     progressValue() {
-      const total = this.progressTotal == 0 ? 1 : this.progressTotal
-      const progress = this.progressTotal == 0 ? 0 : this.progress
-      return ((100.0 * progress) / total)
+      const total = this.progressTotal == 0 ? 1 : this.progressTotal;
+      const progress = this.progressTotal == 0 ? 0 : this.progress;
+      return (100.0 * progress) / total;
     },
   },
   methods: {
     reset() {
       // reset form to initial state
-      this.currentStatus = STATUS_INITIAL
-      this.resolvedCount = 0
-      this.progressTotal = 0
-      this.progressTracking = {}
-      this.progress = 0
+      this.currentStatus = STATUS_INITIAL;
+      this.resolvedCount = 0;
+      this.progressTotal = 0;
+      this.progressTracking = {};
+      this.progress = 0;
     },
     onChange() {
-      const inputFiles = this.$refs.fileInput.files
+      const inputFiles = this.$refs.fileInput.files;
 
-      this.fileCount = inputFiles.length
+      this.fileCount = inputFiles.length;
       for (var i = 0; i < inputFiles.length; i++) {
-        const file = inputFiles[i]
-        let formData = new FormData()
-        formData.append('file', file)
-        this.save(formData, file.name)
+        const file = inputFiles[i];
+        let formData = new FormData();
+        formData.append("file", file);
+        this.save(formData, file.name);
       }
-      this.$refs.fileInput.value = ''
+      this.$refs.fileInput.value = "";
     },
     onUploadProgress(event, fileName) {
       if (event.lengthComputable) {
-        let previousLoaded = 0
+        let previousLoaded = 0;
         if ({}.hasOwnProperty.call(this.progressTracking, fileName)) {
-          previousLoaded = this.progressTracking[fileName]
+          previousLoaded = this.progressTracking[fileName];
         } else {
-          this.progressTotal += event.total
+          this.progressTotal += event.total;
         }
-        this.progress += (event.loaded - previousLoaded)
-        this.progressTracking[fileName] = event.loaded
+        this.progress += event.loaded - previousLoaded;
+        this.progressTracking[fileName] = event.loaded;
       }
     },
     save(formData, fileName) {
       // upload data to the server
-      this.currentStatus = STATUS_SAVING
+      this.currentStatus = STATUS_SAVING;
 
       upload(formData, fileName, this.onUploadProgress)
-        .then((x) => {
-          this.$emit('upload-success', x)
-          this.resolvedCount += 1
+        .then(x => {
+          this.$emit("upload-success", x);
+          this.resolvedCount += 1;
           if (this.resolvedCount === this.fileCount) {
             setTimeout(() => {
-              this.reset()
-            }, 2500)
+              this.reset();
+            }, 2500);
           }
         })
-        .catch((err) => {
-          this.$alert(err.message, 'Upload file(s) error', 'error')
-          this.resolvedCount += 1
-          console.log(this.files)
+        .catch(err => {
+          this.$alert(err.message, "Upload file(s) error", "error");
+          this.resolvedCount += 1;
           if (this.resolvedCount === this.fileCount) {
-            this.reset()
+            this.reset();
           }
-        })
+        });
     },
   },
   mounted() {
-    this.reset()
+    this.reset();
     const CircularProgressClass = Vue.extend({
       components: {
         CircularProgress,
       },
-      render: (h) => {
+      render: h => {
         return h(
-          'circular-progress',
+          "circular-progress",
           {
             props: { strokeWidth: 10 },
             style: {
-              visibility: 'hidden',
+              visibility: "hidden",
             },
           },
           [
-            h('template', { slot: 'footer' }, [
-              h('p', [h('b', 'Uploading'), h('br'), h('b', 'Progress')]),
+            h("template", { slot: "footer" }, [
+              h("p", [h("b", "Uploading"), h("br"), h("b", "Progress")]),
             ]),
           ]
-        )
+        );
       },
-    })
+    });
 
     let instance = new CircularProgressClass({
       propsData: { strokeWidth: 10 },
-    })
-    instance.$slots.footer = ['First line<br>Second line']
-    instance.$mount() // pass nothing
-    this.$refs.dropbox.appendChild(instance.$el)
-    const minHeight = instance.$el.clientHeight + 10
-    this.$refs.dropbox.removeChild(instance.$el)
-    this.$refs.dropbox.style.minHeight = minHeight + 'px'
+    });
+    instance.$slots.footer = ["First line<br>Second line"];
+    instance.$mount(); // pass nothing
+    this.$refs.dropbox.appendChild(instance.$el);
+    const minHeight = instance.$el.clientHeight + 10;
+    this.$refs.dropbox.removeChild(instance.$el);
+    this.$refs.dropbox.style.minHeight = minHeight + "px";
   },
-}
+};
 </script>
 
 <style lang="scss">

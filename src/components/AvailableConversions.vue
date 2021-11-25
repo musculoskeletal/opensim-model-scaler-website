@@ -7,16 +7,16 @@
 </template>
 
 <script>
-import vSelect from 'vue-select'
-import { getAvailableConversions } from '@/services/BackendAPI'
+import vSelect from "vue-select";
+import { getAvailableConversions } from "@/services/BackendAPI";
 
 export default {
-  name: 'AvailableConverions',
+  name: "AvailableConverions",
   components: {
     vSelect,
   },
   props: {
-    updateConverionsListing: {
+    updateConversionsListing: {
       type: Boolean,
       default: false,
     },
@@ -28,43 +28,43 @@ export default {
     return {
       conversionsListing: [],
       timeoutHandle: 0,
-    }
+    };
   },
   watch: {
-    updateConverionsListing() {
-      this.debounceFetchConversions()
+    updateConversionsListing() {
+      this.debounceFetchConversions();
     },
     file() {
-      this.debounceFetchConversions()
+      this.debounceFetchConversions();
     },
   },
   created() {
-    this.fetchConversions()
+    this.fetchConversions();
   },
   methods: {
     debounceFetchConversions() {
       if (this.timeoutHandle !== 0) {
-        clearTimeout(this.timeoutHandle)
+        clearTimeout(this.timeoutHandle);
       }
       this.timeoutHandle = setTimeout(() => {
-        this.timeoutHandle = 0
-        this.fetchConversions()
-      }, 500)
+        this.timeoutHandle = 0;
+        this.fetchConversions();
+      }, 500);
     },
     fetchConversions() {
       getAvailableConversions(this.file)
-        .then((data) => {
-          this.conversionsListing = data.conversions
+        .then(data => {
+          this.conversionsListing = data.conversions;
         })
-        .catch((err) => {
-          this.$alert(err.message, 'Fetch conversions error', 'error')
-        })
+        .catch(err => {
+          this.$alert(err.message, "Fetch conversions error", "error");
+        });
     },
     setSelected(value) {
-      this.$emit('input', value)
+      this.$emit("input", value);
     },
   },
-}
+};
 </script>
 
 <style scoped></style>

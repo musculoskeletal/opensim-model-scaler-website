@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <div id="main-page">
-      <h1>MAP Client</h1>
+      <h1>Musculoskeletal Model Scaler</h1>
       <div class="source-creation">
         <upload-file @upload-success="fileAdded = !fileAdded"></upload-file>
         <div class="spacer"></div>
@@ -53,30 +53,36 @@
       <div class="process">
         <process-data
           :demographic="currentDemographic"
+          :conversion="currentConversion"
           :essentialMarkers="essentialMarkers"
           :trackingMarkers="trackingMarkers"
           :file="currentFile"
+          @job-created="onJobCreated"
         ></process-data>
+      </div>
+      <div class="jobs-list">
+        <job-list :update="jobListChanged"></job-list>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import UploadFile from '@/components/UploadFile.vue'
-import CreateDemographic from '@/components/CreateDemographic.vue'
-import CreateConversion from '@/components/CreateConversion.vue'
-import AvailableFiles from '@/components/AvailableFiles.vue'
-import AvailableDemographics from '@/components/AvailableDemographics.vue'
-import AvailableConversions from '@/components/AvailableConversions.vue'
-import SelectMarkers from '@/components/SelectMarkers.vue'
-import ProcessData from '@/components/ProcessData.vue'
-import LoadMarkersButton from '@/components/LoadMarkersButton.vue'
+import UploadFile from "@/components/UploadFile.vue";
+import CreateDemographic from "@/components/CreateDemographic.vue";
+import CreateConversion from "@/components/CreateConversion.vue";
+import AvailableFiles from "@/components/AvailableFiles.vue";
+import AvailableDemographics from "@/components/AvailableDemographics.vue";
+import AvailableConversions from "@/components/AvailableConversions.vue";
+import SelectMarkers from "@/components/SelectMarkers.vue";
+import ProcessData from "@/components/ProcessData.vue";
+import LoadMarkersButton from "@/components/LoadMarkersButton.vue";
+import JobList from "@/components/JobList.vue";
 
-import 'vue-select/dist/vue-select.css'
+import "vue-select/dist/vue-select.css";
 
 export default {
-  name: 'App',
+  name: "App",
   components: {
     UploadFile,
     CreateDemographic,
@@ -87,6 +93,7 @@ export default {
     SelectMarkers,
     ProcessData,
     LoadMarkersButton,
+    JobList,
   },
   data() {
     return {
@@ -99,9 +106,15 @@ export default {
       markers: [],
       essentialMarkers: [],
       trackingMarkers: [],
-    }
+      jobListChanged: false,
+    };
   },
-}
+  methods: {
+    onJobCreated() {
+      this.jobListChanged = !this.jobListChanged;
+    },
+  },
+};
 </script>
 
 <style>
